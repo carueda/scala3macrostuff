@@ -9,3 +9,7 @@ class Test1 extends munit.FunSuite:
     assertEquals(power(2.0, 0), 1.0)
     assertEquals(power(2.0, 10), 1024.0)
   }
+
+  test("reflect-basic") {
+    assertEquals(refl(2), 2)
+  }

@@ -12,8 +12,9 @@ inline def power(inline x: Double, inline n: Int) =
 private def powerCode(x: Expr[Double], n: Expr[Int])(using
     Quotes
 ): Expr[Double] =
-  val value: Double = pow(x.valueOrError, n.valueOrError)
-  Expr(value)
+  val res = Expr(pow(x.valueOrError, n.valueOrError))
+  scribe.warn(s"powerCode(x=${x.show}, n=${n.show}) => ${res.show}")
+  res
 
 private def pow(x: Double, n: Int): Double =
   if n == 0 then 1 else x * pow(x, n - 1)
