@@ -1,0 +1,12 @@
+.bloop
+.bsp
+.metals
+project/project
+project/target
+target
+tmp
+out
+dist
+.vscode
+.idea
+.history
