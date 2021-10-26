@@ -8,6 +8,7 @@ Refs:
 - <https://blog.shangjiaming.com/scala3-implicit/>
 - <https://eed3si9n.com/intro-to-scala-3-macros>
 - <https://medium.com/virtuslab/tasty-way-of-re-writing-macros-in-scala-3-3ce704a2c37c>
+- <https://blog.philipp-martini.de/blog/magic-mirror-scala3/>
 
 ---
 
