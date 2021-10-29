@@ -18,14 +18,27 @@ package scala3macrostuff
   debug("A", x, "B", y) // A, x = 21, B, y = 34
   debug(x, y, z)        // x = 21, y = 34, z = 55
 
-  case class CC(n: Int)
+  case class CC(n: Int, s: String)
   class RC(n: Int)
   println(s" isCaseClass[CC] = ${isCaseClass[CC]}")
   println(s" isCaseClass[RC] = ${isCaseClass[RC]}")
   println(s" isCaseClass[Int] = ${isCaseClass[Int]}")
-  println("\nno struct: " + showTree(List(1).map(x => x + 1), struct = false))
-  println("\nwith struct: " + showTree(List(1).map(x => x + 1), struct = true))
-  println("addOne(7) = " + addOne(7))
+
+  val cc = CC(1, "uno")
+  println("\nshowTree no struct: " + showTree(cc, struct = false))
+  println("\nshowTree no struct: " + showTree(CC(33, "foo"), struct = false))
+
+  println(
+    "\nshowTree no struct: " + showTree(List(1).map(x => x + 1), struct = false)
+  )
+  println(
+    "\nshowTree with struct: " + showTree(
+      List(1).map(x => x + 1),
+      struct = true
+    )
+  )
+
+  println("\naddOne(7) = " + addOne(7))
   println("Source.line = " + Source.line)
   println("addOneList(7) = " + addOneList(7))
   println("addOneToString(7) = " + addOneToString(7))
@@ -37,3 +50,16 @@ package scala3macrostuff
     "foo", 
     Dummy.echo("bar"))))
   // format: on
+
+  case class NonEmpty[T](e: T, tail: Option[NonEmpty[T]])
+
+  println("ti = " + typeinfo.TypeInfo[NonEmpty])
+
+  case class CCT[T](n: Int, s: String | Long)
+  val cct1 = CCT(1, 1)
+  val cct2 = CCT(1, "2")
+  println("cc = " + typeinfo.TypeInfo.apply0[CC])
+  println("cct = " + typeinfo.TypeInfo[CCT])
+
+  // case class DD(d: Int, s: { val y: Int })
+  // println("DD = " + typeinfo.TypeInfo.apply0[DD])
