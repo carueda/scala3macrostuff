@@ -10,8 +10,7 @@ import scala.compiletime._
 import scala.deriving._
 
 trait ShowB[A]:
-  // def (a: A).show: String
-  extension (v: A) def show: String
+  extension (a: A) def show: String
 
 given intCfgGen: ShowB[Int] with
   extension (a: Int) def show: String = a.toString()
@@ -24,11 +23,13 @@ object ShowB:
     extension (a: A)
       def show: String =
         inline m match
-          case p: Mirror.ProductOf[A] => showProduct(p, a)
-          case s: Mirror.SumOf[A]     => showSum(s, a)
+          case given Mirror.ProductOf[A] => showProduct(a)
+          case given Mirror.SumOf[A]     => showSum(a)
   }
 
-  private inline def showProduct[A](m: Mirror.ProductOf[A], a: A): String =
+  private inline def showProduct[A](a: A)(using
+      m: Mirror.ProductOf[A]
+  ): String =
     val productName: String       = constValue[m.MirroredLabel]
     val names: List[String]       = elemLabels[m.MirroredElemLabels]
     val instances: List[ShowB[_]] = summonAll[m.MirroredElemTypes]
@@ -40,7 +41,8 @@ object ShowB:
         val valueStr = instance.asInstanceOf[ShowB[Any]].show(value)
         s"$name = $valueStr"
     }
-    s"$productName(${fields.mkString(", ")})"
+    if fields.isEmpty then productName
+    else s"$productName(${fields.mkString(", ")})"
 
   private inline def elemLabels[T <: Tuple]: List[String] =
     inline erasedValue[T] match
@@ -52,7 +54,7 @@ object ShowB:
       case _: EmptyTuple => Nil
       case _: (t *: ts)  => summonInline[ShowB[t]] :: summonAll[ts]
 
-  private inline def showSum[A](m: Mirror.SumOf[A], a: A): String =
+  private inline def showSum[A](a: A)(using m: Mirror.SumOf[A]): String =
     val ord = m.ordinal(a)
     showCase[A, m.MirroredElemTypes](0, ord, a)
 
@@ -61,7 +63,7 @@ object ShowB:
       case _: EmptyTuple => ""
       case _: (t *: ts) =>
         if n == ord then
-          summonFrom { case p: Mirror.ProductOf[`t`] =>
-            showProduct[t](p, a.asInstanceOf[t])
+          summonFrom { case given Mirror.ProductOf[`t`] =>
+            showProduct[t](a.asInstanceOf[t])
           }
         else showCase[A, ts](n + 1, ord, a)
