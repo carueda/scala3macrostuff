@@ -5,6 +5,7 @@ package scala3macrostuff.lifting
 // Also see, https://users.scala-lang.org/t/solved-dotty-macros-lifting-expressions-how-to-set-this-up/6424
 
 import scala.quoted.*
+import scala.compiletime.{error, codeOf}
 
 enum Exp:
   case Num(n: Int)
@@ -14,23 +15,29 @@ enum Exp:
 
 import Exp.*
 
-object compile:
-  def apply(e: Exp, env: Map[String, Expr[Int]])(using Quotes): Expr[Int] =
+inline def compileExp(inline e: Exp): Int = ${
+  applyImpl('e)
+}
+
+def applyImpl(e: Expr[Exp])(using Quotes): Expr[Int] =
+  def rec(e: Expr[Exp], env: Map[String, Int]): Expr[Int] =
     e match
-      case Num(n) =>
-        Expr(n)
-      case Plus(e1, e2) =>
-        '{ ${ compile(e1, env) } + ${ compile(e2, env) } }
-      case Var(x) =>
-        env(x)
-      case Let(x, e, body) =>
-        '{ val y = ${ compile(e, env) }; ${ compile(body, env + (x -> 'y)) } }
+      case '{ Num($n) } =>
+        n
 
-@main def main: Unit =
-  val exp    = Plus(Plus(Num(2), Var("x")), Num(4))
-  val letExp = Let("x", Num(3), exp)
+      case '{ Plus($e1, $e2) } =>
+        '{ ${ rec(e1, env) } + ${ rec(e2, env) } }
 
-// TODO how to actually use this?
+      case '{ Var($x) } =>
+        Expr(env(x.valueOrError))
 
-//   compile(letExp, Map())
-//   '{ val y = 3; (2 + y) + 4 }
+      case '{ Let($x, $e, $body) } =>
+        val y    = rec(e, env)
+        val env2 = env + (x.valueOrError -> y.valueOrError)
+        rec(body, env2)
+
+  rec(e, Map())
+
+inline def assertExp(inline expected: Int, inline compiled: Int): Unit =
+  if expected != compiled then 
+      error("oops: expected=" +codeOf(expected)+ " != compiled=" + codeOf(compiled))
