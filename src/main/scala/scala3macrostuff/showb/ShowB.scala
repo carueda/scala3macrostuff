@@ -18,6 +18,9 @@ given intCfgGen: ShowB[Int] with
 given stringCfgGen: ShowB[String] with
   extension (a: String) def show: String = s""""$a""""
 
+given structCfgGen: ShowB[Object{val y: Int}] with
+  extension (a: Object{val y: Int}) def show: String = s"""any($a)"""
+
 object ShowB:
   inline def derived[A](using m: Mirror.Of[A]): ShowB[A] = new ShowB[A] {
     extension (a: A)
