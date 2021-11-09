@@ -22,15 +22,16 @@ given stringCfgGen: ShowB[String] with
 // (like in the scalameta-based implementation of carueda/cfg)
 // doesn't seem possible: you always have to predefine the type.
 
-given structCfgGen: ShowB[Object{val y: Int}] with  
-  extension (a: Object{val y: Int}) def show: String = s"""any($a)"""
-  
+given structCfgGen: ShowB[Object { val y: Int }] with
+  extension (a: Object { val y: Int }) def show: String = s"""any($a)"""
+
 class SRecord(elems: (String, Any)*) extends Selectable:
   private val fields                   = elems.toMap
   def selectDynamic(name: String): Any = fields(name)
 
-given selCfgGen: ShowB[SRecord{val name: String; val age: Int}] with
-  extension (a: SRecord{val name: String; val age: Int}) def show: String = s"""record($a)"""
+given selCfgGen: ShowB[SRecord { val name: String; val age: Int }] with
+  extension (a: SRecord { val name: String; val age: Int })
+    def show: String = s"""record($a)"""
 
 object ShowB:
   inline def derived[A](using m: Mirror.Of[A]): ShowB[A] = new ShowB[A] {

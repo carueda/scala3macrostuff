@@ -7,7 +7,7 @@ import scala.quoted.Expr
 import scala.quoted.Quotes
 
 inline def inspect(inline x: Any): Any = ${
-  inspectCode('x) 
+  inspectCode('x)
 }
 
 def inspectCode(x: Expr[Any])(using Quotes): Expr[Any] =

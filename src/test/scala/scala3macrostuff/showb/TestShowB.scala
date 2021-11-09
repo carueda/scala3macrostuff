@@ -35,7 +35,7 @@ case class MyCfg2(
       val post: Int
     }
 ) //  derives ShowB
-  //  ^ making this derivation generic seems super tricky, if at all possible.
+//  ^ making this derivation generic seems super tricky, if at all possible.
 
 class TestShowB extends munit.FunSuite:
   test("show") {

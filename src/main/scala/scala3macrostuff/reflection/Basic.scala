@@ -1,15 +1,15 @@
 // https://docs.scala-lang.org/scala3/guides/macros/reflection.html
 
-package scala3macrostuff
+package scala3macrostuff.reflection
 
 import scala.compiletime.{error, codeOf}
 import scala.quoted.Expr
 import scala.quoted.Quotes
 import scala.quoted.quotes
 
-inline def refl(inline n: Int) = ${ reflImpl('n) }
+inline def basicRefl(inline n: Int) = ${ basicReflImpl('n) }
 
-private def reflImpl(x: Expr[Int])(using Quotes): Expr[Int] =
+private def basicReflImpl(x: Expr[Int])(using Quotes): Expr[Int] =
   import quotes.reflect.*
   given Printer[Tree] = Printer.TreeStructure
 

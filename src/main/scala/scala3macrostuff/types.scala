@@ -52,7 +52,9 @@ object Source:
     linesv2Impl('{ xs })
   }
 
-  private def linesv2Impl(xs: Expr[List[String]])(using Quotes): Expr[List[String]] =
+  private def linesv2Impl(xs: Expr[List[String]])(using
+      Quotes
+  ): Expr[List[String]] =
     import quotes.reflect.*
     xs match
       case '{ List[String]($vargs*) } =>

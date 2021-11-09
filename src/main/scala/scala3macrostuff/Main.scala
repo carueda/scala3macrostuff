@@ -61,5 +61,5 @@ package scala3macrostuff
   println("cc = " + typeinfo.TypeInfo.apply0[CC])
   println("cct = " + typeinfo.TypeInfo[CCT])
 
-  // case class DD(d: Int, s: { val y: Int })
-  // println("DD = " + typeinfo.TypeInfo.apply0[DD])
+// case class DD(d: Int, s: { val y: Int })
+// println("DD = " + typeinfo.TypeInfo.apply0[DD])

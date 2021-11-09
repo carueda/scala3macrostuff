@@ -14,9 +14,7 @@ object TypeInfo {
     import qctx.reflect.*
 
     val tpe = TypeRepr.of[T]
-    scribe.warn(s"Tetetre: tpe $tpe")
-
-    val name = tpe.typeSymbol.name
+    scribe.warn(s"TypeRepr.of[T] = $tpe")
 
     def fullTypeName(tpe: TypeRepr): String = tpe match
       case t: NamedType =>
@@ -29,6 +27,7 @@ object TypeInfo {
         fullTypeName(base) + args.map(fullTypeName).mkString("[", ",", "]")
 
     val caseFields = tpe.typeSymbol.caseFields.map { s =>
+      scribe.warn(s"caseFields: s = $s")
       val name = s.name
       val tpe = s.tree match {
         case v: ValDef =>
@@ -36,6 +35,8 @@ object TypeInfo {
       }
       s"$name: $tpe"
     }
+
+    val name = tpe.typeSymbol.name
 
     Expr(
       s"$name(${caseFields.mkString(", ")})"
@@ -51,9 +52,7 @@ object TypeInfo {
     import qctx.reflect.*
 
     val tpe = TypeRepr.of[T]
-    scribe.warn(s"Tetetre: tpe $tpe")
-
-    val name = tpe.typeSymbol.name
+    scribe.warn(s"TypeRepr.of[T] = $tpe")
 
     def fullTypeName(tpe: TypeRepr): String = tpe match
       case t: NamedType =>
@@ -73,6 +72,8 @@ object TypeInfo {
       }
       s"$name: $tpe"
     }
+
+    val name = tpe.typeSymbol.name
 
     Expr(
       s"$name(${caseFields.mkString(", ")})"

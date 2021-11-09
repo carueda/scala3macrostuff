@@ -1,5 +1,8 @@
 val scala3Version = "3.1.0"
 
+// kindda conflicts while also editing in vscode
+// scalafmtOnCompile := true
+
 lazy val root = project
   .in(file("."))
   .settings(

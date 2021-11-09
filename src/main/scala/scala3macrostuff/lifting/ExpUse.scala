@@ -7,9 +7,15 @@ package scala3macrostuff.lifting
 import Exp.*
 
 @main def main: Unit =
-  assertExp(42, compileExp(Num(42)) )
-  assertExp(42, compileExp(Num(42)) )
-  assertExp(42, compileExp(Let("x", Num(42), Var("x"))) ) // oops: expected=41 != compiled=42:Int
-  assertExp(42, compileExp(Plus(Num(21), Plus(Num(8), Num(13)))) )
-  assertExp(42, compileExp(Let("x", Num(3), Plus(Plus(Num(18), Var("x")), Num(21)))) )
-  // assertExp(41, compileExp(Let("x", Num(42), Var("x"))) )
+  assertExp(42, compileExp(Num(42)))
+  assertExp(42, compileExp(Num(42)))
+  assertExp(
+    42,
+    compileExp(Let("x", Num(42), Var("x")))
+  ) // oops: expected=41 != compiled=42:Int
+  assertExp(42, compileExp(Plus(Num(21), Plus(Num(8), Num(13)))))
+  assertExp(
+    42,
+    compileExp(Let("x", Num(3), Plus(Plus(Num(18), Var("x")), Num(21))))
+  )
+// assertExp(41, compileExp(Let("x", Num(42), Var("x"))) )

@@ -39,5 +39,7 @@ def applyImpl(e: Expr[Exp])(using Quotes): Expr[Int] =
   rec(e, Map())
 
 inline def assertExp(inline expected: Int, inline compiled: Int): Unit =
-  if expected != compiled then 
-      error("oops: expected=" +codeOf(expected)+ " != compiled=" + codeOf(compiled))
+  if expected != compiled then
+    error(
+      "oops: expected=" + codeOf(expected) + " != compiled=" + codeOf(compiled)
+    )
