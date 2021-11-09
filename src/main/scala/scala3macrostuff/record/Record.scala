@@ -1,16 +1,19 @@
 package scala3macrostuff.record
 
-class Record(elems: (String, Any)*) extends Selectable:
+// If using `Record` as name:
+// "... shadows outer reference to object Record in package java.lang"
+
+class SRecord(elems: (String, Any)*) extends Selectable:
   private val fields = elems.toMap
   def selectDynamic(name: String): Any = fields(name)
 
-type Person = Record {
+type Person = SRecord {
   val name: String
   val age: Int
 }
 
 @main def hello: Unit =
-    val person = Record(
+    val person = SRecord(
     "name" -> "Emma",
     "age" -> 42
     ).asInstanceOf[Person]

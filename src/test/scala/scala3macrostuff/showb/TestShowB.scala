@@ -13,7 +13,29 @@ case class Baz(n: Int, s: String) derives ShowB
 
 case class CC(d: Int, b: Baz) derives ShowB
 
+// would be nice to handle this pattern in a general
+// way; but it doesn't appear to be possible in scala3.
 case class DD(d: Int, s: { val y: Int }) derives ShowB
+
+// always have to "predefine" the type
+type Person = SRecord {
+  val name: String
+  val age: Int
+}
+case class MyCfg(
+    x: Int,
+    r: Person
+) derives ShowB
+
+// Ideally:
+case class MyCfg2(
+    x: Int,
+    server: {
+      val host: String
+      val post: Int
+    }
+) //  derives ShowB
+  //  ^ making this derivation generic seems super tricky, if at all possible.
 
 class TestShowB extends munit.FunSuite:
   test("show") {
@@ -32,4 +54,15 @@ class TestShowB extends munit.FunSuite:
     scribe.warn("dd = " + dd)
     scribe.warn("dd = " + dd.s.getClass.getName)
     scribe.warn("dd.show = " + dd.show)
+
+    val cfg = MyCfg(
+      x = 0,
+      // far from ideal:
+      r = SRecord(
+        "name" -> "nam",
+        "age"  -> 100
+      ).asInstanceOf[Person]
+    )
+    scribe.warn("cfg.show = " + cfg.show)
+
   }
